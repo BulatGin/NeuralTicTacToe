@@ -29,14 +29,18 @@ class Game:
 
         while self.run:
             if self.turn:
-                step = Game.calculate_step(self.field)
+                step = Game.calculate_step(self.field, self.character)
                 self.field[step] = self.character
+                print('The Great Mind makes its move')
                 self.turn = False
             else:
                 try:
                     command = commands[input()]
-                    self.field[command] = Character.get_opposite(self.character)
-                    self.turn = True
+                    if self.field[command] == Character.BLANK:
+                        self.field[command] = Character.get_opposite(self.character)
+                        self.turn = True
+                    else:
+                        print('Field is already occupied')
                 except KeyError:
                     print('Command is unrecognizable')
 
@@ -46,15 +50,23 @@ class Game:
                 self.run = False
 
     @staticmethod
-    def calculate_step(field) -> int:
+    def calculate_step(field, char) -> int:
         possible_steps = []
         for i in range(len(field)):
             if field[i] == Character.BLANK:
-                possible_steps = i
+                possible_steps.append(i)
 
-        # TODO
-        # dummy choice
-        return random.choice(possible_steps)
+        best_step = (0, 0)  # (step, probability)
+        for step in possible_steps:
+            field_copy = field.copy()
+            field_copy[step] = char
+            encoded_field_copy = Character.multiple_encode(field_copy)
+            proba = Game.model.predict_proba([encoded_field_copy])
+            probability = proba[0][1] if char == Character.CROSS else proba[0][0]
+            if probability > best_step[1]:
+                best_step = (step, probability)
+
+        return best_step[0]
 
     def is_field_full(self):
         is_full = True
