@@ -50,7 +50,7 @@ class Game:
         possible_steps = []
         for i in range(len(field)):
             if field[i] == Character.BLANK:
-                possible_steps = i
+                possible_steps.append(i)
 
         # TODO
         # dummy choice

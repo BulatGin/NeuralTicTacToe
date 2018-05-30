@@ -17,7 +17,14 @@ commands = {
 class Character(Enum):
     CROSS = 'X'
     ZERO = 'O'
-    BLANK = ' '
+    BLANK = 'B'
+
+    @staticmethod
+    def to_string(input_array):
+        result = []
+        for i in input_array:
+            result += i.value
+        return result
 
     @staticmethod
     def get_random():
