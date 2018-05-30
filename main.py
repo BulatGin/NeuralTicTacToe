@@ -46,7 +46,16 @@ class Game:
 
             rendering.print_field(self.field)
 
+            if self.is_game_completed():
+                if self.turn:
+                    print("Wow! You are a winner of AI!")
+                else:
+                    print("Haha! AI is a winner)")
+                print("The end")
+                self.run = False
+
             if self.is_field_full():
+                print("The field is full(((")
                 self.run = False
 
     @staticmethod
@@ -73,6 +82,24 @@ class Game:
         for char in self.field:
             is_full &= char != Character.BLANK
         return is_full
+
+    @staticmethod
+    def check_win_combination(*combinations):
+        for char in combinations:
+            if char != combinations[0] or char == Character.BLANK:
+                return False
+        return True
+
+    def is_game_completed(self):
+        return Game.check_win_combination(*self.field[:3]) or \
+               Game.check_win_combination(*self.field[3:6]) or \
+               Game.check_win_combination(*self.field[6:]) or \
+               Game.check_win_combination(self.field[0], self.field[3], self.field[6]) or \
+               Game.check_win_combination(self.field[1], self.field[4], self.field[7]) or \
+               Game.check_win_combination(self.field[2], self.field[5], self.field[8]) or \
+               Game.check_win_combination(self.field[0], self.field[4], self.field[8]) or \
+               Game.check_win_combination(self.field[2], self.field[4], self.field[6])
+
 
 
 if __name__ == '__main__':
