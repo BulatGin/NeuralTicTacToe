@@ -17,7 +17,7 @@ commands = {
 class Character(Enum):
     CROSS = 'X'
     ZERO = 'O'
-    BLANK = 'B'
+    BLANK = ' '
 
     @staticmethod
     def to_string(input_array):
